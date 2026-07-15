@@ -1,0 +1,16 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Dépendances
+node_modules/
+backend/vendor/
+
+# Fichiers d'environnement contenant des mots de passe
+backend/.env.local
+backend/.env.local.php
+backend/.env.*.local
+
+# IDE et éditeurs
+.idea/
+.vscode/
