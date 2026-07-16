@@ -2,6 +2,7 @@ import { allRoutes, websiteName } from './allRoutes.js';
 import { initHome } from '../pages/home.js';
 import { initServices } from '../pages/services.js';
 import { initHabitats } from '../pages/habitats.js';
+import { initContact } from '../pages/contact.js';
 
 const handleLocation = async () => {
   const path = window.location.pathname;
@@ -32,6 +33,8 @@ const handleLocation = async () => {
       initServices();
     } else if (path === '/habitats') {
       initHabitats();
+    } else if (path === '/contact') {
+      initContact();
     }
   } catch (error) {
     console.error('Erreur du routeur :', error);
