@@ -1,43 +1,63 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # 1. Algorithme de hachage moderne recommandé par l'ANSSI
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    # 2. Déclaration du fournisseur de données utilisateurs (Base relationnelle MySQL)
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\Utilisateur
                 property: username
 
+    # 3. Définition des pare-feux de sécurité (Stateless pour architecture SPA)
     firewalls:
         dev:
-            # Ensure dev tools and static assets are always allowed
-            pattern: ^/(_profiler|_wdt|assets|build)/
+            pattern: ^/(_profiler|_wdt)/
             security: false
-        main:
-            lazy: true
-            provider: app_user_provider
 
-            # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
+        # Pare-feu de connexion : Vérifie les identifiants et génère le token JWT[cite: 1]
+        login:
+            pattern: ^/api/auth/login
+            stateless: true
+            json_login:
+                check_path: /api/auth/login
+                username_path: username
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+        # Pare-feu API général : Intercepte le token dans les requêtes entrantes[cite: 1]
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
 
-    # Note: Only the *first* matching rule is applied
+    # 4. Règles d'accès strictes (Autorisations RBAC par rôle métier)[cite: 1]
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # --- ROUTES PUBLIQUES (Accessibles par les visiteurs) ---[cite: 1]
+        - { path: ^/api/services, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/habitats, roles: PUBLIC_ACCESS, methods: [GET] }
+        - {
+              path: ^/api/reviews/validated,
+              roles: PUBLIC_ACCESS,
+              methods: [GET],
+          }
+        - { path: ^/api/reviews, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/contact, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
 
+        # --- ROUTES PRIVÉES SÉCURISÉES (Personnel du Zoo d'Arcadia) ---[cite: 1]
+        - { path: ^/api/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/employe, roles: ROLE_EMPLOYE }
+        - { path: ^/api/veterinaire, roles: ROLE_VETERINAIRE }
+
+# Configuration de test optimisée pour de meilleures performances d'exécution[cite: 1]
 when@test:
     security:
         password_hashers:
-            # Password hashers are resource-intensive by design to ensure security.
-            # In tests, it's safe to reduce their cost to improve performance.
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                cost: 4 # Valeur minimale pour bcrypt[cite: 1]
+                time_cost: 3 # Valeur minimale pour argon[cite: 1]
+                memory_cost: 10 # Valeur minimale pour argon[cite: 1]
