@@ -11,11 +11,12 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
-# 2. Configuration spécifique et installation des extensions PHP (PDO, GD, Intl)
+# 2. Configuration spécifique et installation des extensions PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install intl pdo pdo_mysql gd
 
 # 3. Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# 4. Définition du répertoire de travail par défaut
 WORKDIR /var/www/backend
