@@ -1,13 +1,7 @@
-// frontend/src/js/router/router.js
 import { allRoutes, websiteName } from './allRoutes.js';
-
-// Intercepter la navigation (clic sur un lien sans rechargement)
-const navigate = (event) => {
-  event = event || window.event;
-  event.preventDefault();
-  window.history.pushState({}, '', event.target.href);
-  handleLocation();
-};
+import { initHome } from '../pages/home.js';
+import { initServices } from '../pages/services.js';
+import { initHabitats } from '../pages/habitats.js';
 
 const handleLocation = async () => {
   const path = window.location.pathname;
@@ -15,27 +9,50 @@ const handleLocation = async () => {
     allRoutes.find((r) => r.url === path) ||
     allRoutes.find((r) => r.url === '/');
 
-  // Récupérer le contenu HTML de la page cible
-  const response = await fetch(route.htmlPath);
-  const html = await response.text();
+  try {
+    const response = await fetch(route.htmlPath);
+    if (!response.ok) {
+      throw new Error(
+        `Erreur lors du chargement de la page : ${response.status}`,
+      );
+    }
+    const htmlContent = await response.text();
 
-  // Injecter le code HTML dans notre squelette de page index.html
-  document.getElementById('main-page').innerHTML = html;
-  document.title = `${route.title} - ${websiteName}`;
+    const mainContainer = document.getElementById('main-page');
+    if (mainContainer) {
+      mainContainer.innerHTML = htmlContent;
+    }
+
+    document.title = `${route.title} - ${websiteName}`;
+
+    // Routage et exécution des contrôleurs frontend
+    if (path === '/' || path === '/index.html') {
+      initHome();
+    } else if (path === '/services') {
+      initServices();
+    } else if (path === '/habitats') {
+      initHabitats();
+    }
+  } catch (error) {
+    console.error('Erreur du routeur :', error);
+    document.getElementById('main-page').innerHTML =
+      `<div class="alert alert-danger">Désolé, une erreur est survenue.</div>`;
+  }
 };
 
-// Écouter les événements du navigateur (boutons retour/avant)
-window.onpopstate = handleLocation;
-window.route = navigate;
+const routeEvent = (event) => {
+  event.preventDefault();
+  window.history.pushState({}, '', event.target.href);
+  handleLocation();
+};
 
-// Intercepter tous les clics sur les liens contenant l'attribut "data-link"
 document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', (e) => {
     if (e.target.matches('[data-link]')) {
-      e.preventDefault();
-      window.history.pushState({}, '', e.target.href);
-      handleLocation();
+      routeEvent(e);
     }
   });
+
+  window.onpopstate = handleLocation;
   handleLocation();
 });
