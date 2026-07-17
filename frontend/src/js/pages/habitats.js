@@ -20,6 +20,19 @@ export async function initHabitats() {
       if (!response.ok) throw new Error('Erreur de récupération des habitats');
 
       const habitats = await response.json();
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetName = urlParams.get('name');
+
+      if (targetName) {
+        const targetHabitat = habitats.find(h => h.nom.toLowerCase() === targetName.toLowerCase());
+        if (targetHabitat) {
+          window.history.replaceState({}, document.title, "/habitats");
+          loadDetailView(targetHabitat.id_habitat);
+          return;
+        }
+      }
+
       mainContainer.innerHTML = '';
 
       habitats.forEach((habitat) => {
