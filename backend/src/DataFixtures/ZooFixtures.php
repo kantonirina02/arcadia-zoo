@@ -33,6 +33,16 @@ class ZooFixtures extends Fixture
         $imgJungle->setHabitat($jungle);
         $manager->persist($imgJungle);
 
+        $marais = new Habitat();
+        $marais->setNom('Marais');
+        $marais->setDescription('Une zone marécageuse paisible, parfaite pour les reptiles et amphibiens.');
+        $manager->persist($marais);
+
+        $imgMarais = new \App\Entity\Image();
+        $imgMarais->setImagePath('habitat-marais.jpg');
+        $imgMarais->setHabitat($marais);
+        $manager->persist($imgMarais);
+
         // 2. CRÉATION DES RACES
         $raceLion = new Race();
         $raceLion->setLabel('Lion d\'Afrique');
@@ -41,6 +51,10 @@ class ZooFixtures extends Fixture
         $raceSinge = new Race();
         $raceSinge->setLabel('Chimpanzé');
         $manager->persist($raceSinge);
+
+        $raceReptile = new Race();
+        $raceReptile->setLabel('Alligator');
+        $manager->persist($raceReptile);
 
         // 3. CRÉATION DES ANIMAUX (et affectation des relations)
         $simba = new Animal();
@@ -78,6 +92,18 @@ class ZooFixtures extends Fixture
         $imgGeorge->setImagePath('animal-chimpanze.jpg');
         $imgGeorge->setAnimal($george);
         $manager->persist($imgGeorge);
+
+        $alli = new Animal();
+        $alli->setPrenom('Ali');
+        $alli->setEtat('Très calme');
+        $alli->setRace($raceReptile);
+        $alli->setHabitat($marais);
+        $manager->persist($alli);
+
+        $imgAlli = new \App\Entity\Image();
+        $imgAlli->setImagePath('animal-alligator.jpg');
+        $imgAlli->setAnimal($alli);
+        $manager->persist($imgAlli);
 
         // 4. CRÉATION DES HORAIRES
         $horaire = new Horaire();
