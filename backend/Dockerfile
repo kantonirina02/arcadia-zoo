@@ -22,6 +22,10 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf
 RUN sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+# Configurer Apache pour que toutes les requêtes soient redirigées vers index.php (comme le fait .htaccess)
+RUN echo "<Directory ${APACHE_DOCUMENT_ROOT}>\n\tAllowOverride All\n\tFallbackResource /index.php\n</Directory>" >> /etc/apache2/conf-available/symfony.conf \
+    && a2enconf symfony
+
 # Copier le code source
 COPY . /var/www/html/
 
