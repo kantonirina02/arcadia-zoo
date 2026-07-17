@@ -133,12 +133,178 @@ function renderAdminUsers(content, title) {
   content.innerHTML = '<p class="text-muted">Formulaire de création de compte via POST /api/admin/users (US 6)...</p>';
 }
 
-function renderVetRapport(content, title) {
-  title.textContent = 'Nouveau Rapport Vétérinaire';
-  content.innerHTML = '<p class="text-muted">Formulaire de création de rapport via POST /api/veterinaire/rapports (US 8)...</p>';
+async function renderVetRapport(content, title) {
+  title.textContent = 'Saisir un Rapport Vétérinaire';
+  content.innerHTML = '<div class="spinner-border text-info"></div>';
+
+  try {
+    // Récupérer les animaux via les habitats
+    const resHabitats = await fetch('http://localhost:8080/api/habitats');
+    const habitats = await resHabitats.json();
+    let animalOptions = '';
+    habitats.forEach(h => {
+      if (h.animaux) {
+        h.animaux.forEach(a => {
+          animalOptions += `<option value="${a.id_animal}">${a.prenom} (${a.race})</option>`;
+        });
+      }
+    });
+
+    content.innerHTML = `
+      <form id="form-vet-rapport" class="row g-3">
+        <div id="vet-msg" class="col-12 d-none alert"></div>
+        <div class="col-md-6">
+          <label class="form-label">Animal</label>
+          <select id="vet-animal" class="form-select" required>
+            <option value="">Choisir un animal...</option>
+            ${animalOptions}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Date</label>
+          <input type="date" id="vet-date" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">État (ex: Bon, Malade)</label>
+          <input type="text" id="vet-etat" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Nourriture proposée</label>
+          <input type="text" id="vet-nourriture" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Grammage proposé (g)</label>
+          <input type="number" id="vet-grammage" class="form-control" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Détail (optionnel)</label>
+          <textarea id="vet-detail" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-info text-white">Enregistrer le rapport</button>
+        </div>
+      </form>
+    `;
+
+    document.getElementById('form-vet-rapport').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('vet-msg');
+      try {
+        const response = await authFetch('http://localhost:8080/api/veterinaire/rapports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            animal_id: document.getElementById('vet-animal').value,
+            date: document.getElementById('vet-date').value,
+            etat_animal: document.getElementById('vet-etat').value,
+            nourriture_proposee: document.getElementById('vet-nourriture').value,
+            grammage_propose: parseFloat(document.getElementById('vet-grammage').value),
+            detail_etat: document.getElementById('vet-detail').value
+          })
+        });
+
+        if (response.ok) {
+          msg.className = 'col-12 alert alert-success';
+          msg.textContent = 'Rapport enregistré avec succès !';
+          e.target.reset();
+        } else {
+          throw new Error('Erreur lors de l\'enregistrement');
+        }
+      } catch (err) {
+        msg.className = 'col-12 alert alert-danger';
+        msg.textContent = err.message;
+      }
+    });
+
+  } catch (e) {
+    content.innerHTML = `<div class="alert alert-danger">Erreur de chargement: ${e.message}</div>`;
+  }
 }
 
-function renderEmployeAlimentation(content, title) {
+async function renderEmployeAlimentation(content, title) {
   title.textContent = 'Nourrir un animal';
-  content.innerHTML = '<p class="text-muted">Formulaire d\'alimentation via POST /api/employe/alimentation (US 7)...</p>';
+  content.innerHTML = '<div class="spinner-border text-success"></div>';
+
+  try {
+    const resHabitats = await fetch('http://localhost:8080/api/habitats');
+    const habitats = await resHabitats.json();
+    let animalOptions = '';
+    habitats.forEach(h => {
+      if (h.animaux) {
+        h.animaux.forEach(a => {
+          animalOptions += `<option value="${a.id_animal}">${a.prenom} (${a.race})</option>`;
+        });
+      }
+    });
+
+    content.innerHTML = `
+      <form id="form-emp-alim" class="row g-3">
+        <div id="emp-msg" class="col-12 d-none alert"></div>
+        <div class="col-md-12">
+          <label class="form-label">Animal</label>
+          <select id="emp-animal" class="form-select" required>
+            <option value="">Choisir un animal...</option>
+            ${animalOptions}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Date</label>
+          <input type="date" id="emp-date" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Heure</label>
+          <input type="time" id="emp-heure" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Nourriture donnée</label>
+          <input type="text" id="emp-nourriture" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Quantité donnée (g)</label>
+          <input type="number" id="emp-quantite" class="form-control" required>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">Enregistrer le repas</button>
+        </div>
+      </form>
+    `;
+
+    // Mettre la date et l'heure par défaut
+    const now = new Date();
+    document.getElementById('emp-date').value = now.toISOString().split('T')[0];
+    document.getElementById('emp-heure').value = now.toTimeString().split(' ')[0].substring(0, 5);
+
+    document.getElementById('form-emp-alim').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('emp-msg');
+      try {
+        const response = await authFetch('http://localhost:8080/api/employe/alimentation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            animal_id: document.getElementById('emp-animal').value,
+            date: document.getElementById('emp-date').value,
+            heure: '1970-01-01 ' + document.getElementById('emp-heure').value + ':00', // Format DateTime attendu par Symfony
+            nourriture_donnee: document.getElementById('emp-nourriture').value,
+            quantite_donnee: parseFloat(document.getElementById('emp-quantite').value)
+          })
+        });
+
+        if (response.ok) {
+          msg.className = 'col-12 alert alert-success';
+          msg.textContent = 'Repas enregistré avec succès !';
+          e.target.reset();
+          document.getElementById('emp-date').value = new Date().toISOString().split('T')[0];
+        } else {
+          throw new Error('Erreur lors de l\'enregistrement');
+        }
+      } catch (err) {
+        msg.className = 'col-12 alert alert-danger';
+        msg.textContent = err.message;
+      }
+    });
+
+  } catch (e) {
+    content.innerHTML = `<div class="alert alert-danger">Erreur de chargement: ${e.message}</div>`;
+  }
 }
