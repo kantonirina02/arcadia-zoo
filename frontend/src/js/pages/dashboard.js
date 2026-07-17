@@ -1,4 +1,15 @@
 import { getUserRoles, getPayload, authFetch } from '../auth.js';
+import { 
+  renderAdminServices, 
+  renderAdminHabitats, 
+  renderAdminAnimaux, 
+  renderAdminRapports, 
+  renderAdminHoraires 
+} from './dashboardAdmin.js';
+
+import { renderEmployeServices } from './dashboardEmploye.js';
+
+import { renderVetHabitatComment, renderVetAlimentations } from './dashboardVet.js';
 
 export function initDashboard() {
   const roleBadge = document.getElementById('dash-role');
@@ -27,13 +38,19 @@ export function initDashboard() {
     
     addMenuItem(menuContainer, 'Comptes Employés', 'bi-people', () => renderAdminUsers(contentContainer, titleDisplay));
     addMenuItem(menuContainer, 'Stats Animaux', 'bi-bar-chart', () => renderAdminStats(contentContainer, titleDisplay));
-    // D'autres menus CRUD viendraient ici (Animaux, Habitats...)
+    addMenuItem(menuContainer, 'Gestion Services', 'bi-gear', () => renderAdminServices(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Gestion Habitats', 'bi-tree', () => renderAdminHabitats(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Gestion Animaux', 'bi-bug', () => renderAdminAnimaux(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Gestion Horaires', 'bi-clock', () => renderAdminHoraires(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Rapports Vétérinaires', 'bi-file-medical', () => renderAdminRapports(contentContainer, titleDisplay));
   } 
   else if (roles.includes('ROLE_VETERINAIRE')) {
     roleBadge.textContent = 'Vétérinaire';
     roleBadge.className = 'badge bg-info mb-3';
     
     addMenuItem(menuContainer, 'Saisir un rapport', 'bi-clipboard-pulse', () => renderVetRapport(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Commenter Habitats', 'bi-tree', () => renderVetHabitatComment(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Historique Alimentation', 'bi-clock-history', () => renderVetAlimentations(contentContainer, titleDisplay));
   } 
   else if (roles.includes('ROLE_EMPLOYE')) {
     roleBadge.textContent = 'Employé';
@@ -41,6 +58,7 @@ export function initDashboard() {
     
     addMenuItem(menuContainer, 'Valider les avis', 'bi-chat-check', () => renderEmployeAvis(contentContainer, titleDisplay));
     addMenuItem(menuContainer, 'Nourrir un animal', 'bi-cup-straw', () => renderEmployeAlimentation(contentContainer, titleDisplay));
+    addMenuItem(menuContainer, 'Modifier Services', 'bi-gear', () => renderEmployeServices(contentContainer, titleDisplay));
   }
 }
 
@@ -130,7 +148,68 @@ async function renderEmployeAvis(content, title) {
 
 function renderAdminUsers(content, title) {
   title.textContent = 'Création de compte (Employé/Vétérinaire)';
-  content.innerHTML = '<p class="text-muted">Formulaire de création de compte via POST /api/admin/users (US 6)...</p>';
+  content.innerHTML = `
+    <form id="form-admin-user" class="row g-3 bg-white p-4 rounded shadow-sm">
+      <div id="admin-user-msg" class="col-12 d-none alert"></div>
+      <div class="col-md-6">
+        <label class="form-label">Nom</label>
+        <input type="text" id="au-nom" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Prénom</label>
+        <input type="text" id="au-prenom" class="form-control" required>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Email (Username)</label>
+        <input type="email" id="au-username" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Mot de passe</label>
+        <input type="password" id="au-password" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Rôle</label>
+        <select id="au-role" class="form-select" required>
+          <option value="">Choisir un rôle...</option>
+          <option value="ROLE_EMPLOYE">Employé</option>
+          <option value="ROLE_VETERINAIRE">Vétérinaire</option>
+        </select>
+      </div>
+      <div class="col-12 mt-4">
+        <button type="submit" class="btn btn-danger w-100">Créer le compte</button>
+      </div>
+    </form>
+  `;
+
+  document.getElementById('form-admin-user').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('admin-user-msg');
+    try {
+      const response = await authFetch('http://localhost:8080/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom: document.getElementById('au-nom').value,
+          prenom: document.getElementById('au-prenom').value,
+          username: document.getElementById('au-username').value,
+          password: document.getElementById('au-password').value,
+          role: document.getElementById('au-role').value
+        })
+      });
+
+      if (response.ok) {
+        msg.className = 'col-12 alert alert-success';
+        msg.textContent = 'Compte créé avec succès ! Un email a été envoyé (simulation).';
+        e.target.reset();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de la création');
+      }
+    } catch (err) {
+      msg.className = 'col-12 alert alert-danger';
+      msg.textContent = err.message;
+    }
+  });
 }
 
 async function renderVetRapport(content, title) {
