@@ -17,6 +17,10 @@ class AuthenticationTest extends WebTestCase
         ]));
 
         // Le statut attendu est 200 OK
+        $content = $client->getResponse()->getContent();
+        if ($client->getResponse()->getStatusCode() !== 200) {
+            throw new \Exception("Response was not 200! Content: " . $content);
+        }
         $this->assertResponseIsSuccessful();
 
         $responseContent = json_decode($client->getResponse()->getContent(), true);

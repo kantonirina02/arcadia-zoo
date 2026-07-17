@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 use App\Entity\Animal;
 use App\Entity\Habitat;
 use App\Entity\Race;
+use App\Entity\Horaire;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -54,7 +55,14 @@ class ZooFixtures extends Fixture
         $george->setHabitat($jungle);
         $manager->persist($george);
 
-        // 4. SAUVEGARDE FINALE DANS MYSQL
+        // 4. CRÉATION DES HORAIRES
+        $horaire = new Horaire();
+        $horaire->setJourSemaine('Tous les jours');
+        $horaire->setOuverture(new \DateTime('09:00'));
+        $horaire->setFermeture(new \DateTime('18:00'));
+        $manager->persist($horaire);
+
+        // 5. SAUVEGARDE FINALE DANS MYSQL
         $manager->flush();
     }
 }

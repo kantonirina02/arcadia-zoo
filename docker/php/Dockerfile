@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
 
 # 2. Configuration spécifique et installation des extensions PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install intl pdo pdo_mysql gd
+  && docker-php-ext-install intl pdo pdo_mysql gd \
+  && pecl install mongodb \
+  && docker-php-ext-enable mongodb
 
 # 3. Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

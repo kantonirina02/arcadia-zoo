@@ -65,6 +65,25 @@ const updateAuthUI = () => {
   });
 };
 
+const initFooter = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/api/horaires');
+    if (response.ok) {
+      const horaires = await response.json();
+      const container = document.getElementById('footer-schedule');
+      if (container && horaires.length > 0) {
+        let html = '<strong>Horaires d\'ouverture :</strong><br>';
+        horaires.forEach(h => {
+          html += `${h.jour} : ${h.heure_ouverture} - ${h.heure_fermeture}<br>`;
+        });
+        container.innerHTML = html;
+      }
+    }
+  } catch (err) {
+    console.error('Erreur lors du chargement des horaires:', err);
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', (e) => {
     if (e.target.matches('[data-link]')) {
@@ -82,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('auth_changed', updateAuthUI);
   updateAuthUI();
+
+  initFooter();
 
   window.onpopstate = handleLocation;
   handleLocation();

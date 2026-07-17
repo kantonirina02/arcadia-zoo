@@ -30,7 +30,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: arcadia_mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_secure_password

@@ -12,6 +12,13 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
 
 .font-serif {
