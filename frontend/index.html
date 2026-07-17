@@ -40,8 +40,14 @@
             <li class="nav-item">
               <a class="nav-link" href="/contact" data-link>Contact</a>
             </li>
-            <li class="nav-item" id="nav-login">
+            <li class="nav-item auth-hide" id="nav-login">
               <a class="nav-link" href="/login" data-link>Connexion</a>
+            </li>
+            <li class="nav-item auth-show d-none" id="nav-dashboard">
+              <a class="nav-link text-warning fw-bold" href="/dashboard" data-link><i class="bi bi-speedometer2"></i> Mon Espace</a>
+            </li>
+            <li class="nav-item auth-show d-none" id="nav-logout">
+              <a class="nav-link text-danger" href="#" id="btn-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
             </li>
           </ul>
         </div>
