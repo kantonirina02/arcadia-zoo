@@ -45,6 +45,7 @@ security:
           }
         - { path: ^/api/reviews, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/contact, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/stats/animal, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
 
         # --- ROUTES PRIVÉES SÉCURISÉES (Personnel du Zoo d'Arcadia) ---[cite: 1]
