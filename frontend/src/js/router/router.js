@@ -39,6 +39,8 @@ const handleLocation = async () => {
       initContact();
     } else if (path === '/login') {
       initLogin();
+    } else if (path === '/dashboard') {
+      import('../pages/dashboard.js').then(module => module.initDashboard());
     }
   } catch (error) {
     console.error('Erreur du routeur :', error);
