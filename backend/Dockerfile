@@ -36,8 +36,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV APP_ENV=prod
 
-# Installer les dépendances du projet
-RUN composer install --no-dev --optimize-autoloader
+# Installer les dépendances du projet (sans --no-dev pour permettre les fixtures)
+RUN composer install --optimize-autoloader
 
 # Nettoyer le cache et configurer les permissions
 RUN php bin/console cache:clear --env=prod \
