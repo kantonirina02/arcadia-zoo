@@ -18,12 +18,25 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        // Création des rôles
+        $roleAdmin = new \App\Entity\Role();
+        $roleAdmin->setLabel('ROLE_ADMIN');
+        $manager->persist($roleAdmin);
+
+        $roleVeto = new \App\Entity\Role();
+        $roleVeto->setLabel('ROLE_VETERINAIRE');
+        $manager->persist($roleVeto);
+
+        $roleEmploye = new \App\Entity\Role();
+        $roleEmploye->setLabel('ROLE_EMPLOYE');
+        $manager->persist($roleEmploye);
+
         // Création du compte Administrateur
         $admin = new Utilisateur();
         $admin->setUsername('jose@arcadia.com');
         $admin->setNom('Arcadia');
         $admin->setPrenom('José');
-        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setRole($roleAdmin);
 
         // Hachage sécurisé du mot de passe
         $hashedPasswordAdmin = $this->passwordHasher->hashPassword($admin, 'admin123');
@@ -35,7 +48,7 @@ class AppFixtures extends Fixture
         $veto->setUsername('veto@arcadia.com');
         $veto->setNom('Dupont');
         $veto->setPrenom('Claire');
-        $veto->setRoles(['ROLE_VETERINAIRE']);
+        $veto->setRole($roleVeto);
 
         $hashedPasswordVeto = $this->passwordHasher->hashPassword($veto, 'veto123');
         $veto->setPassword($hashedPasswordVeto);
@@ -46,7 +59,7 @@ class AppFixtures extends Fixture
         $employe->setUsername('employe@arcadia.com');
         $employe->setNom('Martin');
         $employe->setPrenom('Jean');
-        $employe->setRoles(['ROLE_EMPLOYE']);
+        $employe->setRole($roleEmploye);
 
         $hashedPasswordEmploye = $this->passwordHasher->hashPassword($employe, 'employe123');
         $employe->setPassword($hashedPasswordEmploye);
