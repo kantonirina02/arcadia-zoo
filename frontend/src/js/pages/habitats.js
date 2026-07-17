@@ -146,7 +146,8 @@ export async function initHabitats() {
               } catch (e) {
                 console.error('Erreur stats MongoDB', e);
               }
-              alert(`Fiche de ${animal.prenom} consultée ! (+1 ajouté dans MongoDB)`);
+              
+              showAnimalModal(animal);
             });
 
           mainContainer.appendChild(animalCol);
@@ -163,4 +164,60 @@ export async function initHabitats() {
 
   // Chargement initial
   loadListView();
+}
+
+function showAnimalModal(animal) {
+  // Supprimer la modale existante si elle est déjà dans le DOM
+  let existingModal = document.getElementById('animalModal');
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  const animalImg = animal.image_path
+    ? `/assets/images/${animal.image_path}`
+    : '/assets/images/hero-broceliande.webp';
+
+  let reportHtml = '<p class="text-muted fst-italic">Aucun rapport vétérinaire récent disponible.</p>';
+  if (animal.rapport_veterinaire) {
+    const r = animal.rapport_veterinaire;
+    reportHtml = `
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item"><strong>Date de passage :</strong> ${r.date}</li>
+        <li class="list-group-item"><strong>État :</strong> <span class="badge bg-info text-dark">${r.etat_animal}</span></li>
+        <li class="list-group-item"><strong>Nourriture proposée :</strong> ${r.nourriture_proposee} (${r.grammage_propose}g)</li>
+        ${r.detail_etat ? `<li class="list-group-item"><strong>Détail :</strong> ${r.detail_etat}</li>` : ''}
+      </ul>
+    `;
+  }
+
+  const modalHtml = `
+    <div class="modal fade" id="animalModal" tabindex="-1" aria-labelledby="animalModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-success text-white border-0">
+            <h5 class="modal-title font-serif fw-bold" id="animalModalLabel">Fiche de ${animal.prenom}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0">
+            <img src="${animalImg}" class="img-fluid w-100" style="max-height: 250px; object-fit: cover;" alt="${animal.prenom}">
+            <div class="p-4">
+              <h4 class="text-success font-serif">${animal.prenom} <small class="text-muted fs-6">(${animal.race})</small></h4>
+              <p class="mb-4">État de santé général : <strong>${animal.etat}</strong></p>
+              
+              <h5 class="h6 text-success border-bottom pb-2 mb-3"><i class="bi bi-file-medical"></i> Dernier Avis Vétérinaire</h5>
+              ${reportHtml}
+            </div>
+          </div>
+          <div class="modal-footer border-0 bg-light">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+  const modalElement = document.getElementById('animalModal');
+  const modalInstance = new bootstrap.Modal(modalElement);
+  modalInstance.show();
 }
