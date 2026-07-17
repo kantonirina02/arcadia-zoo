@@ -16,11 +16,13 @@ class ZooFixtures extends Fixture
         $savane = new Habitat();
         $savane->setNom('Savane');
         $savane->setDescription('Une vaste plaine herbeuse parsemée d\'acacias, idéale pour les grands mammifères africains.');
+        $savane->setImagePath('habitat-savane.jpg');
         $manager->persist($savane);
 
         $jungle = new Habitat();
         $jungle->setNom('Jungle');
         $jungle->setDescription('Une forêt dense et humide abritant une biodiversité incroyable.');
+        $jungle->setImagePath('habitat-jungle.jpg');
         $manager->persist($jungle);
 
         // 2. CRÉATION DES RACES
@@ -36,7 +38,7 @@ class ZooFixtures extends Fixture
         $simba = new Animal();
         $simba->setPrenom('Simba');
         $simba->setEtat('En pleine forme');
-
+        $simba->setImagePath('simba.jpg');
         $simba->setRace($raceLion);
         $simba->setHabitat($savane);
         $manager->persist($simba);
@@ -44,6 +46,7 @@ class ZooFixtures extends Fixture
         $nala = new Animal();
         $nala->setPrenom('Nala');
         $nala->setEtat('En pleine forme');
+        $nala->setImagePath('nala.jpg');
         $nala->setRace($raceLion);
         $nala->setHabitat($savane);
         $manager->persist($nala);
@@ -51,6 +54,7 @@ class ZooFixtures extends Fixture
         $george = new Animal();
         $george->setPrenom('George');
         $george->setEtat('Légèrement fatigué');
+        $george->setImagePath('animal-chimpanze.jpg');
         $george->setRace($raceSinge);
         $george->setHabitat($jungle);
         $manager->persist($george);
