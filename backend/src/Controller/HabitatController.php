@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HabitatController extends AbstractController
 {
     #[Route('', name: 'api_habitats_index', methods: ['GET'])]
-    public function index(HabitatRepository $habitatRepository): JsonResponse
+    public function index(HabitatRepository $habitatRepository, \App\Repository\ImageRepository $imageRepo): JsonResponse
     {
         // 1. On récupère tous les habitats depuis MySQL
         $habitats = $habitatRepository->findAll();
@@ -19,18 +19,26 @@ class HabitatController extends AbstractController
 
         // 2. On boucle sur chaque habitat
         foreach ($habitats as $habitat) {
+            
+            // Image habitat
+            $imgHab = $imageRepo->findOneBy(['habitat' => $habitat]);
+            $habitatImage = $imgHab ? $imgHab->getImagePath() : null;
 
             // 3. On prépare un tableau vide pour les animaux de CET habitat
             $animauxData = [];
 
             // 4. On boucle sur les animaux liés à cet habitat
             foreach ($habitat->getAnimals() as $animal) {
+                // Image animal
+                $imgAni = $imageRepo->findOneBy(['animal' => $animal]);
+                
                 $animauxData[] = [
                     'id_animal' => $animal->getId(),
                     'prenom' => $animal->getPrenom(),
                     'etat' => $animal->getEtat(),
                     // On inclut le label de la race pour l'affichage complet
-                    'race' => $animal->getRace() ? $animal->getRace()->getLabel() : null
+                    'race' => $animal->getRace() ? $animal->getRace()->getLabel() : null,
+                    'image_path' => $imgAni ? $imgAni->getImagePath() : null
                 ];
             }
 
@@ -39,6 +47,7 @@ class HabitatController extends AbstractController
                 'id_habitat' => $habitat->getId(),
                 'nom' => $habitat->getNom(),
                 'description' => $habitat->getDescription(),
+                'image_path' => $habitatImage,
                 'animaux' => $animauxData
             ];
         }
@@ -51,12 +60,17 @@ class HabitatController extends AbstractController
     public function show(
         HabitatRepository $habitatRepository,
         \App\Repository\RapportVeterinaireRepository $rapportRepo,
+        \App\Repository\ImageRepository $imageRepo,
         int $id
     ): JsonResponse {
         $habitat = $habitatRepository->find($id);
         if (!$habitat) {
             return $this->json(['message' => 'Habitat non trouvé'], 404);
         }
+
+        // Image habitat
+        $imgHab = $imageRepo->findOneBy(['habitat' => $habitat]);
+        $habitatImage = $imgHab ? $imgHab->getImagePath() : null;
 
         $animauxData = [];
         foreach ($habitat->getAnimals() as $animal) {
@@ -73,13 +87,16 @@ class HabitatController extends AbstractController
                 ];
             }
 
+            // Image animal
+            $imgAni = $imageRepo->findOneBy(['animal' => $animal]);
+
             $animauxData[] = [
                 'id_animal' => $animal->getId(),
                 'prenom' => $animal->getPrenom(),
                 'etat' => $animal->getEtat(),
                 'race' => $animal->getRace() ? $animal->getRace()->getLabel() : null,
                 'rapport_veterinaire' => $reportData,
-                'image_path' => null // Placeholder for image if needed
+                'image_path' => $imgAni ? $imgAni->getImagePath() : null
             ];
         }
 
@@ -87,6 +104,7 @@ class HabitatController extends AbstractController
             'id_habitat' => $habitat->getId(),
             'nom' => $habitat->getNom(),
             'description' => $habitat->getDescription(),
+            'image_path' => $habitatImage,
             'animaux' => $animauxData
         ]);
     }
