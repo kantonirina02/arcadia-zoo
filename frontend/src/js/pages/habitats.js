@@ -139,9 +139,14 @@ export async function initHabitats() {
           // Événement d'augmentation de la consultation (NoSQL MongoDB)
           animalCol
             .querySelector('.btn-view-animal')
-            .addEventListener('click', () => {
-              window.history.pushState({}, '', `/animaux/${animal.id_animal}`);
-              window.dispatchEvent(new Event('popstate'));
+            .addEventListener('click', async () => {
+              try {
+                // Incrémentation MongoDB (US 11)
+                await fetch(`http://localhost:8080/api/stats/animal/${animal.id_animal}`, { method: 'POST' });
+              } catch (e) {
+                console.error('Erreur stats MongoDB', e);
+              }
+              alert(`Fiche de ${animal.prenom} consultée ! (+1 ajouté dans MongoDB)`);
             });
 
           mainContainer.appendChild(animalCol);
