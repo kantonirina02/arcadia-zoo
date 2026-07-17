@@ -16,14 +16,22 @@ class ZooFixtures extends Fixture
         $savane = new Habitat();
         $savane->setNom('Savane');
         $savane->setDescription('Une vaste plaine herbeuse parsemée d\'acacias, idéale pour les grands mammifères africains.');
-        $savane->setImagePath('habitat-savane.jpg');
         $manager->persist($savane);
+
+        $imgSavane = new \App\Entity\Image();
+        $imgSavane->setImagePath('habitat-savane.jpg');
+        $imgSavane->setHabitat($savane);
+        $manager->persist($imgSavane);
 
         $jungle = new Habitat();
         $jungle->setNom('Jungle');
         $jungle->setDescription('Une forêt dense et humide abritant une biodiversité incroyable.');
-        $jungle->setImagePath('habitat-jungle.jpg');
         $manager->persist($jungle);
+
+        $imgJungle = new \App\Entity\Image();
+        $imgJungle->setImagePath('habitat-jungle.jpg');
+        $imgJungle->setHabitat($jungle);
+        $manager->persist($imgJungle);
 
         // 2. CRÉATION DES RACES
         $raceLion = new Race();
@@ -38,26 +46,38 @@ class ZooFixtures extends Fixture
         $simba = new Animal();
         $simba->setPrenom('Simba');
         $simba->setEtat('En pleine forme');
-        $simba->setImagePath('simba.jpg');
         $simba->setRace($raceLion);
         $simba->setHabitat($savane);
         $manager->persist($simba);
 
+        $imgSimba = new \App\Entity\Image();
+        $imgSimba->setImagePath('simba.jpg');
+        $imgSimba->setAnimal($simba);
+        $manager->persist($imgSimba);
+
         $nala = new Animal();
         $nala->setPrenom('Nala');
         $nala->setEtat('En pleine forme');
-        $nala->setImagePath('nala.jpg');
         $nala->setRace($raceLion);
         $nala->setHabitat($savane);
         $manager->persist($nala);
 
+        $imgNala = new \App\Entity\Image();
+        $imgNala->setImagePath('nala.jpg');
+        $imgNala->setAnimal($nala);
+        $manager->persist($imgNala);
+
         $george = new Animal();
         $george->setPrenom('George');
         $george->setEtat('Légèrement fatigué');
-        $george->setImagePath('animal-chimpanze.jpg');
         $george->setRace($raceSinge);
         $george->setHabitat($jungle);
         $manager->persist($george);
+
+        $imgGeorge = new \App\Entity\Image();
+        $imgGeorge->setImagePath('animal-chimpanze.jpg');
+        $imgGeorge->setAnimal($george);
+        $manager->persist($imgGeorge);
 
         // 4. CRÉATION DES HORAIRES
         $horaire = new Horaire();
