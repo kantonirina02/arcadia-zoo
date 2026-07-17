@@ -5,7 +5,7 @@ export async function renderAdminServices(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/services');
+    const res = await fetch(`${window.API_BASE_URL}/api/services');
     const data = await res.json();
 
     let html = `
@@ -36,7 +36,7 @@ export async function renderAdminServices(content, title) {
 
     document.getElementById('form-add-service').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch('http://localhost:8080/api/admin/services', {
+      await authFetch(`${window.API_BASE_URL}/api/admin/services', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,7 +49,7 @@ export async function renderAdminServices(content, title) {
 
     window.deleteService = async (id) => {
       if(confirm('Supprimer ce service ?')) {
-        await authFetch(`http://localhost:8080/api/admin/services/${id}`, { method: 'DELETE' });
+        await authFetch(`${window.API_BASE_URL}/api/admin/services/${id}`, { method: 'DELETE' });
         renderAdminServices(content, title);
       }
     };
@@ -63,7 +63,7 @@ export async function renderAdminHabitats(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/habitats');
+    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
     const data = await res.json();
 
     let html = `
@@ -93,7 +93,7 @@ export async function renderAdminHabitats(content, title) {
 
     document.getElementById('form-add-habitat').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch('http://localhost:8080/api/admin/habitats', {
+      await authFetch(`${window.API_BASE_URL}/api/admin/habitats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,7 +106,7 @@ export async function renderAdminHabitats(content, title) {
 
     window.deleteHabitat = async (id) => {
       if(confirm('Supprimer cet habitat ?')) {
-        await authFetch(`http://localhost:8080/api/admin/habitats/${id}`, { method: 'DELETE' });
+        await authFetch(`${window.API_BASE_URL}/api/admin/habitats/${id}`, { method: 'DELETE' });
         renderAdminHabitats(content, title);
       }
     };
@@ -120,7 +120,7 @@ export async function renderAdminAnimaux(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/habitats');
+    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
     const habitats = await res.json();
 
     let html = `
@@ -160,7 +160,7 @@ export async function renderAdminAnimaux(content, title) {
 
     document.getElementById('form-add-animal').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch('http://localhost:8080/api/admin/animaux', {
+      await authFetch(`${window.API_BASE_URL}/api/admin/animaux', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -175,7 +175,7 @@ export async function renderAdminAnimaux(content, title) {
 
     window.deleteAnimal = async (id) => {
       if(confirm('Supprimer cet animal ?')) {
-        await authFetch(`http://localhost:8080/api/admin/animaux/${id}`, { method: 'DELETE' });
+        await authFetch(`${window.API_BASE_URL}/api/admin/animaux/${id}`, { method: 'DELETE' });
         renderAdminAnimaux(content, title);
       }
     };
@@ -189,7 +189,7 @@ export async function renderAdminRapports(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await authFetch('http://localhost:8080/api/admin/rapports');
+    const res = await authFetch(`${window.API_BASE_URL}/api/admin/rapports');
     const data = await res.json();
 
     let html = `
@@ -251,7 +251,7 @@ export async function renderAdminHoraires(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/horaires');
+    const res = await fetch(`${window.API_BASE_URL}/api/horaires');
     const data = await res.json();
 
     let html = `
@@ -286,7 +286,7 @@ export async function renderAdminHoraires(content, title) {
       e.preventDefault();
       const ouv = document.getElementById('hor-ouv').value;
       const ferm = document.getElementById('hor-ferm').value;
-      await authFetch('http://localhost:8080/api/admin/horaires', {
+      await authFetch(`${window.API_BASE_URL}/api/admin/horaires', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -300,7 +300,7 @@ export async function renderAdminHoraires(content, title) {
 
     window.deleteHoraire = async (id) => {
       if(confirm('Supprimer cet horaire ?')) {
-        await authFetch(`http://localhost:8080/api/admin/horaires/${id}`, { method: 'DELETE' });
+        await authFetch(`${window.API_BASE_URL}/api/admin/horaires/${id}`, { method: 'DELETE' });
         renderAdminHoraires(content, title);
       }
     };

@@ -5,7 +5,7 @@ export async function renderEmployeServices(content, title) {
   content.innerHTML = '<div class="spinner-border text-success"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/services');
+    const res = await fetch(`${window.API_BASE_URL}/api/services');
     const data = await res.json();
 
     let html = `
@@ -31,7 +31,7 @@ export async function renderEmployeServices(content, title) {
       try {
         const nom = document.getElementById(`emp-srv-nom-${id}`).value;
         const desc = document.getElementById(`emp-srv-desc-${id}`).value;
-        const resUpdate = await authFetch(`http://localhost:8080/api/employe/services/${id}`, {
+        const resUpdate = await authFetch(`${window.API_BASE_URL}/api/employe/services/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nom: nom, description: desc })

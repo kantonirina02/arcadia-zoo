@@ -5,7 +5,7 @@ export async function renderVetHabitatComment(content, title) {
   content.innerHTML = '<div class="spinner-border text-info"></div>';
 
   try {
-    const res = await fetch('http://localhost:8080/api/habitats');
+    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
     const data = await res.json();
 
     let html = `
@@ -34,7 +34,7 @@ export async function renderVetHabitatComment(content, title) {
     window.updateHabitatComment = async (id) => {
       const commentaire = document.getElementById(`vet-hab-com-${id}`).value;
       try {
-        const response = await authFetch(`http://localhost:8080/api/veterinaire/habitats/${id}`, {
+        const response = await authFetch(`${window.API_BASE_URL}/api/veterinaire/habitats/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ commentaire_veterinaire: commentaire })
@@ -59,7 +59,7 @@ export async function renderVetAlimentations(content, title) {
 
   try {
     // Récupérer les animaux pour le select
-    const resHabitats = await fetch('http://localhost:8080/api/habitats');
+    const resHabitats = await fetch(`${window.API_BASE_URL}/api/habitats');
     const habitats = await resHabitats.json();
     let animalOptions = '';
     habitats.forEach(h => {
@@ -97,7 +97,7 @@ export async function renderVetAlimentations(content, title) {
       
       resContainer.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Chargement...';
       try {
-        const response = await authFetch(`http://localhost:8080/api/veterinaire/alimentation/animal/${animalId}`);
+        const response = await authFetch(`${window.API_BASE_URL}/api/veterinaire/alimentation/animal/${animalId}`);
         const data = await response.json();
 
         if (data.length === 0) {

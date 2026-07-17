@@ -16,7 +16,7 @@ export async function initHabitats() {
             </div>`;
 
     try {
-      const response = await fetch('http://localhost:8080/api/habitats');
+      const response = await fetch(`${window.API_BASE_URL}/api/habitats');
       if (!response.ok) throw new Error('Erreur de récupération des habitats');
 
       const habitats = await response.json();
@@ -79,7 +79,7 @@ export async function initHabitats() {
             </div>`;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/habitats/${id}`);
+      const response = await fetch(`${window.API_BASE_URL}/api/habitats/${id}`);
       if (!response.ok)
         throw new Error("Erreur de récupération du détail de l'habitat");
 
@@ -155,7 +155,7 @@ export async function initHabitats() {
             .addEventListener('click', async () => {
               try {
                 // Incrémentation MongoDB (US 11)
-                await fetch(`http://localhost:8080/api/stats/animal/${animal.id_animal}`, { method: 'POST' });
+                await fetch(`${window.API_BASE_URL}/api/stats/animal/${animal.id_animal}`, { method: 'POST' });
               } catch (e) {
                 console.error('Erreur stats MongoDB', e);
               }

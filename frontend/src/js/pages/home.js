@@ -8,7 +8,7 @@ async function fetchReviews() {
   if (!container) return;
 
   try {
-    const response = await fetch('http://localhost:8080/api/reviews/validated');
+    const response = await fetch(`${window.API_BASE_URL}/api/reviews/validated');
 
     if (!response.ok) {
       throw new Error('Impossible de récupérer les avis.');
@@ -94,7 +94,7 @@ function setupReviewForm() {
     if (!pseudo || !comment) return;
 
     try {
-      const response = await fetch('http://localhost:8080/api/reviews', {
+      const response = await fetch(`${window.API_BASE_URL}/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
