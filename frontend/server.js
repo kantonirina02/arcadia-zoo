@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+// Static trace for Vercel's NFT (Node File Trace)
+try { require.resolve('./index.html'); } catch(e) {}
+
 const port = process.env.PORT || 3000;
 const baseDir = path.join(__dirname);
 
