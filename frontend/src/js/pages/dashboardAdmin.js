@@ -291,8 +291,8 @@ export async function renderAdminHoraires(content, title) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           jour_semaine: document.getElementById('hor-jour').value,
-          ouverture: \`1970-01-01 \${ouv}:00\`,
-          fermeture: \`1970-01-01 \${ferm}:00\`
+          ouverture: `1970-01-01 ${ouv}:00`,
+          fermeture: `1970-01-01 ${ferm}:00`
         })
       });
       renderAdminHoraires(content, title);
