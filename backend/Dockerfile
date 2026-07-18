@@ -39,6 +39,7 @@ ENV APP_ENV=prod
 # Installer les dépendances du projet (sans --no-dev pour permettre les fixtures)
 RUN composer install --optimize-autoloader
 
-# Nettoyer le cache et configurer les permissions
+# Nettoyer le cache, générer les clés JWT et configurer les permissions
 RUN php bin/console cache:clear --env=prod \
-    && chown -R www-data:www-data /var/www/html/var
+    && php bin/console lexik:jwt:generate-keypair --skip-if-exists \
+    && chown -R www-data:www-data /var/www/html/var /var/www/html/config/jwt
