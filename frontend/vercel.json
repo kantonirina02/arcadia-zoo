@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "server.js": {
-      "includeFiles": ["{src,assets,pages}/**", "index.html"]
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -11,7 +6,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/server.js"
+      "destination": "/index.html"
     }
   ]
 }
