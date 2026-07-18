@@ -67,7 +67,7 @@ const updateAuthUI = () => {
 
 const initFooter = async () => {
   try {
-    const response = await fetch(`${window.API_BASE_URL}/api/horaires');
+    const response = await fetch(window.API_BASE_URL + '/api/horaires');
     if (response.ok) {
       const horaires = await response.json();
       const container = document.getElementById('footer-schedule');

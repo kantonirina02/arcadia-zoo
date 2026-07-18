@@ -5,7 +5,7 @@ export async function renderVetHabitatComment(content, title) {
   content.innerHTML = '<div class="spinner-border text-info"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const res = await fetch(window.API_BASE_URL + '/api/habitats');
     const data = await res.json();
 
     let html = `
@@ -59,7 +59,7 @@ export async function renderVetAlimentations(content, title) {
 
   try {
     // Récupérer les animaux pour le select
-    const resHabitats = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const resHabitats = await fetch(window.API_BASE_URL + '/api/habitats');
     const habitats = await resHabitats.json();
     let animalOptions = '';
     habitats.forEach(h => {

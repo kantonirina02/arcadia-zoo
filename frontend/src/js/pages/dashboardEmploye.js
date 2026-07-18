@@ -5,7 +5,7 @@ export async function renderEmployeServices(content, title) {
   content.innerHTML = '<div class="spinner-border text-success"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/services');
+    const res = await fetch(window.API_BASE_URL + '/api/services');
     const data = await res.json();
 
     let html = `

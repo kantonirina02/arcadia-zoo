@@ -5,7 +5,7 @@ export async function renderAdminServices(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/services');
+    const res = await fetch(window.API_BASE_URL + '/api/services');
     const data = await res.json();
 
     let html = `
@@ -36,7 +36,7 @@ export async function renderAdminServices(content, title) {
 
     document.getElementById('form-add-service').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch(`${window.API_BASE_URL}/api/admin/services', {
+      await authFetch(window.API_BASE_URL + '/api/admin/services', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -63,7 +63,7 @@ export async function renderAdminHabitats(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const res = await fetch(window.API_BASE_URL + '/api/habitats');
     const data = await res.json();
 
     let html = `
@@ -93,7 +93,7 @@ export async function renderAdminHabitats(content, title) {
 
     document.getElementById('form-add-habitat').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch(`${window.API_BASE_URL}/api/admin/habitats', {
+      await authFetch(window.API_BASE_URL + '/api/admin/habitats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +120,7 @@ export async function renderAdminAnimaux(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const res = await fetch(window.API_BASE_URL + '/api/habitats');
     const habitats = await res.json();
 
     let html = `
@@ -160,7 +160,7 @@ export async function renderAdminAnimaux(content, title) {
 
     document.getElementById('form-add-animal').addEventListener('submit', async (e) => {
       e.preventDefault();
-      await authFetch(`${window.API_BASE_URL}/api/admin/animaux', {
+      await authFetch(window.API_BASE_URL + '/api/admin/animaux', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -189,7 +189,7 @@ export async function renderAdminRapports(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await authFetch(`${window.API_BASE_URL}/api/admin/rapports');
+    const res = await authFetch(window.API_BASE_URL + '/api/admin/rapports');
     const data = await res.json();
 
     let html = `
@@ -251,7 +251,7 @@ export async function renderAdminHoraires(content, title) {
   content.innerHTML = '<div class="spinner-border text-danger"></div>';
 
   try {
-    const res = await fetch(`${window.API_BASE_URL}/api/horaires');
+    const res = await fetch(window.API_BASE_URL + '/api/horaires');
     const data = await res.json();
 
     let html = `
@@ -286,7 +286,7 @@ export async function renderAdminHoraires(content, title) {
       e.preventDefault();
       const ouv = document.getElementById('hor-ouv').value;
       const ferm = document.getElementById('hor-ferm').value;
-      await authFetch(`${window.API_BASE_URL}/api/admin/horaires', {
+      await authFetch(window.API_BASE_URL + '/api/admin/horaires', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

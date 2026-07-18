@@ -3,7 +3,7 @@ export async function initServices() {
   if (!container) return;
 
   try {
-    const response = await fetch(`${window.API_BASE_URL}/api/services');
+    const response = await fetch(window.API_BASE_URL + '/api/services');
     if (!response.ok) throw new Error('Erreur de récupération des services');
 
     const services = await response.json();

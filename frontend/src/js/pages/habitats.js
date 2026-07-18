@@ -16,7 +16,7 @@ export async function initHabitats() {
             </div>`;
 
     try {
-      const response = await fetch(`${window.API_BASE_URL}/api/habitats');
+      const response = await fetch(window.API_BASE_URL + '/api/habitats');
       if (!response.ok) throw new Error('Erreur de récupération des habitats');
 
       const habitats = await response.json();

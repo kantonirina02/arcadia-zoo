@@ -85,7 +85,7 @@ async function renderAdminStats(content, title) {
   content.innerHTML = '<div class="spinner-border text-success"></div>';
 
   try {
-    const res = await authFetch(`${window.API_BASE_URL}/api/admin/stats');
+    const res = await authFetch(window.API_BASE_URL + '/api/admin/stats');
     const data = await res.json();
 
     if (!res.ok) throw new Error("Erreur de récupération");
@@ -107,7 +107,7 @@ async function renderEmployeAvis(content, title) {
   content.innerHTML = '<div class="spinner-border text-success"></div>';
 
   try {
-    const res = await authFetch(`${window.API_BASE_URL}/api/employe/reviews');
+    const res = await authFetch(window.API_BASE_URL + '/api/employe/reviews');
     const data = await res.json();
 
     if (data.length === 0) {
@@ -185,7 +185,7 @@ function renderAdminUsers(content, title) {
     e.preventDefault();
     const msg = document.getElementById('admin-user-msg');
     try {
-      const response = await authFetch(`${window.API_BASE_URL}/api/admin/users', {
+      const response = await authFetch(window.API_BASE_URL + '/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -218,7 +218,7 @@ async function renderVetRapport(content, title) {
 
   try {
     // Récupérer les animaux via les habitats
-    const resHabitats = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const resHabitats = await fetch(window.API_BASE_URL + '/api/habitats');
     const habitats = await resHabitats.json();
     let animalOptions = '';
     habitats.forEach(h => {
@@ -269,7 +269,7 @@ async function renderVetRapport(content, title) {
       e.preventDefault();
       const msg = document.getElementById('vet-msg');
       try {
-        const response = await authFetch(`${window.API_BASE_URL}/api/veterinaire/rapports', {
+        const response = await authFetch(window.API_BASE_URL + '/api/veterinaire/rapports', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -305,7 +305,7 @@ async function renderEmployeAlimentation(content, title) {
   content.innerHTML = '<div class="spinner-border text-success"></div>';
 
   try {
-    const resHabitats = await fetch(`${window.API_BASE_URL}/api/habitats');
+    const resHabitats = await fetch(window.API_BASE_URL + '/api/habitats');
     const habitats = await resHabitats.json();
     let animalOptions = '';
     habitats.forEach(h => {
@@ -357,7 +357,7 @@ async function renderEmployeAlimentation(content, title) {
       e.preventDefault();
       const msg = document.getElementById('emp-msg');
       try {
-        const response = await authFetch(`${window.API_BASE_URL}/api/employe/alimentation', {
+        const response = await authFetch(window.API_BASE_URL + '/api/employe/alimentation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
