@@ -1,8 +1,17 @@
 {
+  "functions": {
+    "server.js": {
+      "includeFiles": "{src,assets,pages}/**"
+    }
+  },
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://arcadia-zoo.fly.dev/api/$1"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/server.js"
     }
   ]
 }
